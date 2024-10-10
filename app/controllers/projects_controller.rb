@@ -29,7 +29,7 @@ class ProjectsController < ApplicationController
     @metric = Metric.find(params[:metric_id])
     period = Period.find(params[:period_id])
 
-    @project.assign_value(@metric, period, params[:value])
+    @project.assign(@metric, period, params[:value])
     @project.assign_dependents(@metric, period)
     @project.save
 

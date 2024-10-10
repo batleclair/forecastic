@@ -1,7 +1,8 @@
 class Formula < ApplicationRecord
   belongs_to :metric
+  has_one :project, through: :metric
   after_commit :update_project_values, on: %i(update)
-  # before_destroy :delete_calcs
+  before_destroy :delete_calcs
 
   # def components
   #   body.gsub(/\#\{\d*\}/) do |match|
@@ -18,26 +19,6 @@ class Formula < ApplicationRecord
     to_a.map {|e| e.match(/\#\{\d*\}/) ? Metric.find(e[/\d+/].to_i).name : e } unless body.nil?
   end
 
-  # def process(period)
-  #   errors = []
-  #   output = body.gsub(/\#\{\d*\}/) do |match|
-  #     metric = Metric.find(match[/\d+/].to_i)
-  #     entry = Entry.find_by(metric: metric, period: period)
-  #     if entry&.value
-  #       entry.value
-  #     elsif metric.formula
-  #       if metric.formula.contains?(self.metric) || metric.formula.process(period).nil?
-  #         errors << "na"
-  #       else
-  #         metric.formula&.process(period)
-  #       end
-  #     else
-  #       errors << "na"
-  #     end
-  #   end
-  #   errors.empty? ? eval(output) : nil
-  # end
-
   def contains?(metric)
     body.match?(/\#\{#{metric.id}\}/)
   end
@@ -45,18 +26,12 @@ class Formula < ApplicationRecord
   def update_project_values
     project = metric.project
     values = project.values
-    update_project(values)
+    project.periods.each do |period|
+      # return if values["#{metric.id}"]["#{period.id}"]["entry"]
+      values["#{metric.id}"]["#{period.id}"]["calc"] = calc(period, values)
+    end
     project.update(values: values)
   end
-
-  # def update_project(values, period)
-  #   # periods = metric.project.periods
-  #   # periods.each do |period|
-  #     return if values["#{metric.id}"]["#{period.id}"]["entry"]
-  #     values["#{metric.id}"]["#{period.id}"]["calc"] = calc(period, values)
-  #   # end
-  #   values
-  # end
 
   def calc(period, values)
     output = body.gsub(/\#\{\d*\}/) do |match|
@@ -70,12 +45,22 @@ class Formula < ApplicationRecord
     end
   end
 
+  def circular_for(period)
+    cell = Cell.new(period: period, metric: metric, project: project)
+    # precedent_ids = body.scan(/\#\{\d*\}/).map!{|e| e[/\d+/].to_i}
+    project.values
+
+  end
+
   # def insert_at(position)
   #   self.body = to_a.insert(position.to_i, to_a.last)[0..-2].join if position
   # end
 
   def delete_calcs
     values = metric.project.values
-    values
+    metric.project.periods.pluck(:id).each do |period_id|
+      values["#{metric.id}"]["#{period_id}"]["calc"] = nil
+    end
+    metric.project.update(values: values)
   end
 end
