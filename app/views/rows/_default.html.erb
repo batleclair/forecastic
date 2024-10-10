@@ -1,0 +1,16 @@
+<tr>
+  <td class="fs-12 nowrap w-150px">
+    <%= turbo_frame_tag "row-#{row.id}" do %>
+      <%= link_to row.metric.name, row_path(row), data: {turbo_frame: "row-#{row.id}", action: "turbo:click->sections#update", section: row.section.id}, class: "block pl-20 pr-10 pt-5 pb-5 fc-black" %>
+    <% end %>
+  </td>
+
+  <% @periods.each do |period| %>
+    <td>
+      <%= simple_form_for(@project, url: input_path(@sheet.id, row.metric.id, period.id), html: {class: "", data: {turbo: true, controller: "forms"}}) do |f| %>
+        <%= text_field_tag :value, @project.value_for(row.metric, period), class: "border-2l w-100 pl-10 pr-10 pt-5 pb-5 text-end bg-1l", data: {action: "change->forms#submit"} %>
+      <% end %>
+    </td>
+    <%# <%= render partial: "entries/cell", locals: {period: period, metric: row.metric} %>
+  <% end %>
+</tr>

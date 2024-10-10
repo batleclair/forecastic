@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "edit" do %>
+  <%= simple_form_for(@sheet, data: {controller: "forms", action: "change->forms#submit"}, html: {class:"btn-sm-static bg-1l pos-rel outline-1n"}) do |f| %>
+    <%= f.input_field :name, data: {forms_target: "input", action: "input->forms#resize"}, class: "fs-14 pl-5 pr-5 round-20" %>
+    <%= link_to "×", :back, class: "fc-1n fw-6" %>
+    <span class="block pos-abs op-0 fs-14 pl-5 pr-5" data-forms-target="resizer"><%= @sheet.name %></div>
+  <% end %>
+<% end %>

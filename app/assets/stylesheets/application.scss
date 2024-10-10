@@ -1,0 +1,70 @@
+@import 'config/colors';
+@import 'config/fonts';
+
+@import 'components/buttons';
+@import 'components/forms';
+@import 'components/lists';
+@import 'components/menus';
+@import 'components/modals';
+@import 'components/notifications';
+@import 'components/sheets';
+@import 'components/tables';
+
+@import 'utilities/alignments';
+@import 'utilities/borders';
+@import 'utilities/display';
+@import 'utilities/flexboxes';
+@import 'utilities/margins';
+@import 'utilities/positions';
+@import 'utilities/rounds';
+@import 'utilities/sizes';
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html * {
+  box-sizing: border-box;
+  font-family: $font-1;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  padding: 0;
+  margin: 0;
+  cursor: default;
+}
+
+p {
+  color: $clr-2d;
+}
+
+a{
+  text-decoration: none;
+}
+
+table{
+  border-spacing: 0;
+}
+
+th, td {
+  padding: 0;
+}
+
+input, textarea{
+  border-width: 0;
+  &:focus-visible {
+    outline: none
+  }
+}
+
+button{
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}

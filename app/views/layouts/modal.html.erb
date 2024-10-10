@@ -1,0 +1,18 @@
+<head>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal">
+    <div>
+      <div class="flex ai-center jc-between mb-20">
+        <h3><%= @title %></h3>
+        <%= link_to :back, data: {turbo: false} do %>
+          <span class="mso-icon fs-20 fc-1n fw-700">close</span>
+        <% end %>
+      </div>
+      <%= yield %>
+    </div>
+  </div>
+<% end %>

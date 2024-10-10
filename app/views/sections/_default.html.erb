@@ -1,0 +1,4 @@
+<%= turbo_frame_tag "section-#{section.id}", data: {id: section.id}, class: "section" do %>
+  <%= link_to section.name, section_path(section), data: {turbo_frame: "section-#{section.id}", action: "turbo:click->sections#update"}, class: "block pl-5 w-100 bg-2l fc-black fw-5 fs-14 border-t-2d border-b-2d" %>
+  <%= render partial: "rows/list", locals: {section: section} %>
+<% end %>

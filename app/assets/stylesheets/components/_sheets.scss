@@ -1,0 +1,18 @@
+.section {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.section[active] {
+  display: block;
+  margin-bottom: 10px;
+  width: 100%;
+  > a:first-child {
+    border-bottom: 1px solid $clr-1n;
+    border-top: 1px solid $clr-1n;
+    font-weight: 600;
+    color: $clr-1n;
+    background-color: $clr-1l;
+  }
+}

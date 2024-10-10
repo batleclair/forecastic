@@ -1,0 +1,15 @@
+<% entry = Entry.find_by(metric: metric, period: period) %>
+
+<% if metric&.formula&.process(period)  %>
+  <td class="text-end fs-12 pt-5 pb-5 pl-10 pr-10 fc-2d bg-white">
+    <%= metric.formula.process(period) %>
+  </td>
+<% else %>
+  <td>
+    <%= simple_form_for([@sheet, entry || Entry.new], html: {class: "", data: {turbo: true, controller: "forms"}}) do |f| %>
+      <%= f.input_field :value, class: "border-2l w-100 pl-10 pr-10 pt-5 pb-5 text-end bg-1l", data: {action: "change->forms#submit"} %>
+      <%= f.input_field :metric_id, as: :hidden, value: metric.id %>
+      <%= f.input_field :period_id, as: :hidden, value: period.id %>
+    <% end %>
+  </td>
+<% end %>

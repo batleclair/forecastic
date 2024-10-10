@@ -1,0 +1,10 @@
+<%= turbo_frame_tag "section-#{@section.id}" do %>
+  <div class="bg-1l w-100 border-t-1n border-b-1n flex ai-center pl-5 pr-10 fs-14 pl-20" data-sections-target="active" action="turbo:click->sections#update" active>
+    <%= simple_form_for(@section, data: {controller: "forms", action: "change->forms#submit "}) do |f| %>
+      <%= f.input_field :name, data: {forms_target: "input", action: "input->forms#resize"}, class: "fw-6 fc-black fs-14 pl-5 pr-5 round-20" %>
+      <%= link_to "×", section_path(@section), class: "fc-1n fw-6" %>
+      <span class="block pos-abs op-0 fs-14 fw-6 pl-5 pr-5" data-forms-target="resizer"><%= @section.name %></div>
+    <% end %>
+  </div>
+  <%= render partial: "rows/list", locals: {section: @section} %>
+<% end %>

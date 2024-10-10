@@ -1,0 +1,40 @@
+textarea{
+  min-height: 80px;
+}
+
+.v-form{
+  label{
+    display: block;
+    font-size: 12px;
+    color: $clr-1n;
+  }
+  .wrapper{
+    margin-bottom: 15px;
+    position: relative;
+  }
+  input.string, textarea.text{
+    border-bottom: $clr-2d 1px solid;
+    background-color: $clr-2l;
+    color: $clr-2d;
+    padding: 2px 5px;
+    width: 100%;
+    &:focus{
+      background-color: $clr-1l;
+      color: $clr-1n;
+      border-bottom: $clr-1n 1px solid;
+      font-weight: 500;
+    }
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

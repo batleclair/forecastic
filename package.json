@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@rails/request.js": "^0.0.11",
+    "sortablejs": "^1.15.3"
+  }
+}

@@ -1,0 +1,5 @@
+<table class="mb-10 w-100 fixed-table">
+  <% section.rows.includes(metric: :formula).each do |row| %>
+    <%= render partial: "rows/default", locals: {row: row} %>
+  <% end %>
+</table>

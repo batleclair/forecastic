@@ -1,0 +1,19 @@
+<% @title = "Edit metric" %>
+
+<%= simple_form_for(@metric, html: {class: "v-form", data: {controller: "forms"}}) do |f| %>
+  <%= f.input :name, input_html: {data: {action: "change->forms#submit"}} %>
+<% end %>
+
+<%= turbo_frame_tag "formula" do %>
+  <% if @metric.formula %>
+    <%= render partial: "formulas/builder", locals: {formula: @metric.formula} %>
+  <% else %>
+    <div class="flex ai-center mb-10">
+      <span class="mso-icon w-20px">function</span>
+      <span class="fs-12 fc-2d">No formula set for this metric</span>
+    </div>
+    <div class="flex-middle w-100">
+      <%= button_to "Set formula", metric_formulas_path(@metric), class: "btn-sm bg-1n fc-white" %>
+    </div>
+  <% end %>
+<% end %>

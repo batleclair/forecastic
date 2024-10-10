@@ -1,0 +1,28 @@
+.modal{
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  background-color: rgba(23, 126, 137, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  >div{
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 250px;
+    min-height: 150px;
+    max-width: 500px;
+    max-height: 80vh;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 3px 6px 6px rgba(23, 126, 137, 0.5);
+  }
+}
+
+#modal{
+  position: absolute;
+  top: 0;
+  left: 0;
+}

@@ -1,0 +1,25 @@
+<% @title = "New row" %>
+
+<div class="flex ai-center jc-between gap-10 mb-20 min-w-300">
+  <%= link_to "Select metric", "", class: "btn-sm bg-1l fc-1n fw-5 w-100 text-center", data: {turbo_frame: "modal"} %>
+  <%= link_to "Create new", new_section_metric_path(@section), class: "btn-sm bg-2l bg-to-1l fc-2d fc-to-1n w-100 text-center", data: {turbo_frame: "modal"} %>
+</div>
+
+<% if @project.metrics.empty? %>
+  <p class="fs-12">No metric has been defined yet for this project</p>
+<% else %>
+  <%= form_tag new_section_row_path(@section), method: :get, data: {controller: "forms", turbo_frame: "metrics"} do %>
+    <%= text_field_tag :query, "", data: {action: "input->forms#submit"}, class: "w-100 bg-1l fc-1n p-10", placeholder: "Search..." %>
+  <% end %>
+  <%= turbo_frame_tag "metrics" do %>
+    <% if @metrics.empty? %>
+      <p class="fs-12">No match for this project</p>
+    <% else %>
+      <% @metrics.each do |metric| %>
+        <%= button_to metric.name, section_metric_rows_path(@section, metric), form: {data: { action: "turbo:submit-end->modals#redirect" }} %>
+      <% end %>
+    <% end %>
+    <div class="w-100 border-b-2n p-10 mb-10"></div>
+    <%= link_to "Manage project metrics", project_metrics_path(@project), class: "fs-12 fw-5 fc-1n", data: {turbo: false} %>
+  <% end %>
+<% end %>

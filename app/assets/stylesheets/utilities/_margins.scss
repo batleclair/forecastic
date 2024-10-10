@@ -1,0 +1,43 @@
+$sizes: 0, 5, 10, 15, 20, 30, 40, 50;
+
+@each $size in $sizes {
+  .ml-#{$size}{
+    margin-left: #{$size}px;
+  }
+  .mr-#{$size}{
+    margin-right: #{$size}px;
+  }
+  .mt-#{$size}{
+    margin-top: #{$size}px;
+  }
+  .mb-#{$size}{
+    margin-bottom: #{$size}px;
+  }
+  .m-#{$size}{
+    margin: #{$size}px;
+  }
+}
+
+@each $size in $sizes {
+  .pl-#{$size}{
+    padding-left: #{$size}px;
+  }
+  .pr-#{$size}{
+    padding-right: #{$size}px;
+  }
+  .pt-#{$size}{
+    padding-top: #{$size}px;
+  }
+  .pb-#{$size}{
+    padding-bottom: #{$size}px;
+  }
+  .p-#{$size}{
+    padding: #{$size}px;
+  }
+}
+
+@each $size in $sizes {
+  .gap-#{$size}{
+    gap: #{$size}px;
+  }
+}

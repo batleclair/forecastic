@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  period: one
+  metric: one
+  value: 1.5
+
+two:
+  period: two
+  metric: two
+  value: 1.5

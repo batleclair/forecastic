@@ -1,0 +1,31 @@
+<div class="bg-white round-20 w-100 p-20">
+  <%= turbo_frame_tag "controls" do %>
+    <%= render partial: "sheets/controls" %>
+  <% end %>
+
+  <div>
+    <table class="mb-10 w-100 fixed-table">
+      <thead>
+        <td class="w-150px"></td>
+        <% @periods.each do |period| %>
+          <td class="text-center fs-12 fw-5">
+            <div class=" bg-2l ml-5 mr-5 p-5">
+              <%= period.date.strftime('%m-%Y') %>
+            </div>
+          </td>
+        <% end %>
+      </thead>
+    </table>
+  </div>
+
+  <%= render partial: "sheets/table" %>
+
+  <%= button_to sheet_sections_path(@sheet), class: "zoom-on-hover flex ai-center p-0" do %>
+    <span class="mso-icon round flex-middle bg-1n fc-white h-20px w-20px p-0">add</span>
+    <span class="fc-1n pl-5 fs-12 fw-5">Add section</span>
+  <% end %>
+
+
+  <%= turbo_frame_tag "results" %>
+
+</div>

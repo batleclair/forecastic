@@ -1,0 +1,9 @@
+<%= turbo_frame_tag "table" do %>
+  <div data-controller="sections" data-src=<%= request.url %>>
+      <%= turbo_frame_tag "sections", data: {controller: "sortable", sortable_url_value: "/sections/:id/sort", sortable_handle_value: true } do %>
+        <% @sections.includes(:rows).each do |section| %>
+          <%= render partial: "sections/default", locals: {section: section} %>
+        <% end %>
+      <% end %>
+  </div>
+<% end %>

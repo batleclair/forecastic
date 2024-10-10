@@ -1,0 +1,18 @@
+<%= turbo_frame_tag "section-#{@section.id}" do %>
+
+  <div class="bg-1l w-100 flex ai-center pl-5 pr-10 fs-14 fc-1n border-b-1n border-t-1n" data-sections-target="active">
+    <span class="mso-icon w-20px handle" data-sortable-target="handle">drag_indicator</span>
+    <%= link_to @section.name, edit_section_path(@section), class:"fc-1n fw-6", data: {turbo_frame: "section-#{@section.id}"} %>
+    <%= link_to section_path(@section), data: {turbo_method: :delete}, class: "fc-4n flex-middle w-20px" do %>
+      <span class="mso-icon">delete</span>
+    <% end %>
+  </div>
+
+  <%= render partial: "rows/list", locals: {section: @section} %>
+
+  <%= link_to new_section_row_path(@section), data: {turbo_frame: "modal"}, class: "p-0 flex ai-center" do %>
+    <span class="mso-icon round flex-middle bg-1n fc-white h-20px w-20px p-0">add</span>
+    <span class="fc-1n pl-5 fs-12 fw-5">Add row</span>
+  <% end %>
+
+<% end %>

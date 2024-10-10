@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  section: one
+  metric: one
+  position: 1
+  anchor: false
+
+two:
+  section: two
+  metric: two
+  position: 1
+  anchor: false

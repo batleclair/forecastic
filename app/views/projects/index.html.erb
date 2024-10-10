@@ -1,0 +1,23 @@
+<div class="flex ai-center gap-10 mb-20 pos-rel">
+  <%= link_to "", new_project_path, class: "w-100 h-100 pos-abs", data: {turbo_frame: "modal"} %>
+  <span class="flex-middle round bg-1n fc-white h-30px w-30px fs-20 block">+</span>
+  <h3 class="fc-1n">Create new project</h3>
+</div>
+
+<div class="flex w-100 gap-20" data-controller="menus">
+  <div class="w-400px card-menu">
+    <h4 class="mb-20">On-going projects</h4>
+    <% @projects.each do |project| %>
+      <div class="bg-white round-20 pos-rel w-100 mb-10" data-menus-target="item">
+        <%= link_to "", project_path(project), class: "w-100 h-100 pos-abs", data: {turbo_frame: "show", action: "click->menus#setActive"} %>
+        <div class="flex jc-between ai-center p-20">
+          <h3><%= project.name %></h3>
+          <span class="active-icon fc-1n">→</span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="w-100">
+    <%= turbo_frame_tag "show" %>
+  </div>
+</div>

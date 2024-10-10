@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Forecastic</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= render partial: "shared/navbar" %>
+    <%= turbo_frame_tag "modal", data: { controller: "modals" } %>
+    <div class="pr-40 pl-40 pb-50 pt-20 bg-2l min-h-screen">
+      <%= yield %>
+    </div>
+  </body>
+</html>

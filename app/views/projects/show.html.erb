@@ -1,0 +1,27 @@
+<%= turbo_frame_tag "show" do %>
+  <div class="bg-white round-20 w-100 p-20 max-w-800">
+    <div class="mb-20">
+      <h3 class="mb-5"><%= @project.name %></h3>
+      <p class="fs-12"><%= @project.description %></p>
+    </div>
+    <div class="mb-20 w-100 flex jc-between ai-center">
+      <table>
+        <tbody>
+          <tr>
+            <td class="pr-15">Created: </td>
+            <td><%= @project.created_at.strftime('%Y-%m-%d - %H:%M')%> |</td>
+          </tr>
+          <tr>
+            <td class="pr-15">Last modified: </td>
+            <td><%= @project.updated_at.strftime('%Y-%m-%d - %H:%M')%> |</td>
+          </tr>
+        </tbody>
+      </table>
+      <%= link_to "Open project", project_sheet_path(@project, @project.sheets.first), class: "btn bg-1n fc-white w-200px text-center", data: {turbo: false} %>
+    </div>
+    <div class="w-100 border-b-2n mb-20"></div>
+    <div>
+      <h6>placeholder</h6>
+    </div>
+  </div>
+<% end %>

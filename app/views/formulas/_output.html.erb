@@ -1,0 +1,6 @@
+<%= turbo_frame_tag "output", data: {builder_target: "output"} do %>
+  <% formula.output_array&.each do |component| %>
+    <span class="mr-5"><%= component %></span>
+  <% end %>
+  <%= render partial: "formulas/field" %>
+<% end %>

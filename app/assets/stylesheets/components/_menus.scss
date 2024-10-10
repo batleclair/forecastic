@@ -1,0 +1,16 @@
+.card-menu{
+  .active-icon{
+    display: none;
+  }
+  [active]{
+    outline: 1px solid $clr-1n;
+    background-color: $clr-1l;
+    .active-icon{
+      display: block;
+    }
+  }
+}
+
+.handle{
+  cursor: grab;
+}

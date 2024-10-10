@@ -1,0 +1,16 @@
+<div class="flex ai-center gap-10 mb-40">
+  <div class="flex ai-center gap-10" data-controller="sortable" data-sortable-url-value="/sheets/:id/sort">
+    <% @sheets.each do |sheet| %>
+      <% if sheet == @sheet %>
+        <%= turbo_frame_tag "edit", data: {id: sheet.id} do %>
+          <%= render partial: "active_btn", locals: {sheet: sheet} %>
+        <% end %>
+      <% else %>
+        <%= link_to sheet.name, project_sheet_path(@project, sheet), class: "btn-sm bg-2l bg-to-1l fc-2d fc-to-1n", data: {id: sheet.id, turbo: false} %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= button_to project_sheets_path(@project), class: "round flex-middle bg-1n fc-white h-20px w-20px p-0 zoom-on-hover", data: {turbo: false} do %>
+    <span class="mso-icon">add</span>
+  <% end %>
+</div>

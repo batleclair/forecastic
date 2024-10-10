@@ -1,0 +1,20 @@
+.section-table{
+  a{
+    pointer-events: none;
+  }
+  [active]{
+    h5{
+      background-color: $clr-1l;
+      color: $clr-1n;
+      border-bottom: 1px solid $clr-1n;
+      border-top: 1px solid $clr-1n;
+    }
+    a{
+      pointer-events: all;
+    }
+  }
+}
+
+.fixed-table{
+  table-layout: fixed;
+}

@@ -1,0 +1,6 @@
+<div class="flex-middle bg-1l btn-sm gap-10" active>
+  <%= link_to sheet.name, edit_sheet_path(sheet), class: "bg-1l fc-1n fw-5", data: {turbo_frame: "edit"} %>
+  <%= button_to sheet_path(sheet), method: :delete, class: "fc-4n p-0 flex-middle", data: {turbo: false} do %>
+    <span class="mso-icon pop-up">delete</span>
+  <% end %>
+</div>

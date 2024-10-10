@@ -1,0 +1,41 @@
+$clr-1n: #177E89;
+$clr-1l: #EDF9FB;
+
+$clr-2n: #D4D2D5;
+$clr-2l: #ECE8EE;
+$clr-2d: #A8A5AA;
+
+$clr-3n: #1F2041;
+
+$clr-4n: #FF0035;
+
+$colors: (
+  "1n": $clr-1n,
+  "1l": $clr-1l,
+  "2n": $clr-2n,
+  "2l": $clr-2l,
+  "2d": $clr-2d,
+  "3n": $clr-3n,
+  "4n": $clr-4n,
+  "white": white,
+  "black": black
+);
+
+@each $id, $hex in $colors {
+  .fc-#{$id}{
+    color: #{$hex};
+  }
+  .fc-to-#{$id}{
+    &:hover{
+      color: #{$hex};
+    }
+  }
+  .bg-#{$id}{
+    background-color: #{$hex};
+  }
+  .bg-to-#{$id}{
+    &:hover{
+      background-color: #{$hex};
+    }
+  }
+}

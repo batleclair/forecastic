@@ -1,0 +1,11 @@
+<%= text_field_tag :query, "",
+  data: {
+    builder_target: "field",
+    action: "input->builder#analyze
+      keydown.left->builder#moveLeft
+      keydown.right->builder#moveRight
+      keydown.backspace->builder#backSpace"
+    },
+  autofocus: true,
+  class: "w-20px bg-1l fc-1n p-5 bg-white round",
+  placeholder: "..." %>

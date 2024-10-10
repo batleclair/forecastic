@@ -1,0 +1,35 @@
+@mixin hover-1ms{
+  transition: ease-in-out 0.1s;
+  &:hover{
+    transition: ease-in-out 0.1s;
+  }
+}
+
+@mixin zoom-on-hover{
+  @include hover-1ms;
+  scale: 100%;
+  &:hover{
+    scale: 110%;
+  }
+}
+
+.btn-sm{
+  @include zoom-on-hover;
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.btn{
+  @include zoom-on-hover;
+  border-radius: 15px;
+  padding: 10px 20px;
+}
+
+.zoom-on-hover{
+  @include zoom-on-hover;
+}
+
+.btn-sm-static{
+  border-radius: 20px;
+  padding: 5px 10px;
+}

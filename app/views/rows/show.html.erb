@@ -1,0 +1,8 @@
+<%= turbo_frame_tag "row-#{@row.id}" do %>
+  <div class="flex ai-center gap-20 pl-20 pr-10 pt-5 pb-5 bg-1l fc-1n" data-sections-target="active">
+    <%= link_to @row.metric.name, edit_metric_path(@row.metric), data: {turbo_frame: "modal"}, class: "fw-6" %>
+    <%= link_to row_path(@row), data: {turbo_method: :delete}, class: "flex-middle" do  %>
+      <span class="mso-icon fc-4n">delete</span>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,13 @@
+<% @title = "New row" %>
+
+<div class="flex ai-center jc-between gap-10 mb-20 min-w-300">
+  <%= link_to "Select metric", new_section_row_path(@section), class: "btn-sm bg-2l bg-to-1l fc-2d fc-to-1n w-100 text-center", data: {turbo_frame: "modal"} %>
+  <%= link_to "Create new", "", class: "btn-sm bg-1l fc-1n fw-5 w-100 text-center", data: {turbo_frame: "modal"} %>
+</div>
+
+<%= simple_form_for([@section, @metric], html: {class: "v-form", data: {turbo: true}}) do |f| %>
+  <%= f.input :name %>
+  <div class="flex jc-end w-100">
+    <%= f.button :submit %>
+  </div>
+<% end %>

@@ -1,0 +1,38 @@
+<%= turbo_frame_tag "formula" do %>
+  <div data-controller="builder" class="mb-10">
+
+    <div class="w-100 min-h-50 bg-1l border-1n min-w-400">
+
+          <%= form_tag edit_metric_path(formula.metric), method: :get, data: {builder_target: "searchForm", turbo_frame: "results"}, class: "pos-rel p-5" do %>
+
+            <%= turbo_frame_tag "output", data: {builder_target: "output"} do %>
+              <% formula.output_array&.each do |component| %>
+                <span class="mr-5"><%= component %></span>
+              <% end %>
+              <%= render partial: "formulas/field" %>
+            <% end %>
+
+            <%= turbo_frame_tag "results" do %>
+              <ul class="p-0 m-0 fs-12 bg-white pos-abs w-100 z-1">
+                <% @metrics&.each do |metric| %>
+                    <li><%= link_to metric.name, "", class: "fc-black p-5", data: {action: "click->builder#selectMetric", id: metric.id} %></li>
+                <% end %>
+              </ul>
+            <% end %>
+
+          <% end %>
+
+    </div>
+
+
+    <%= simple_form_for(formula, html: {data: {turbo: true, builder_target: "formulaForm"}}) do |f| %>
+      <%= f.input_field :body, as: :hidden, data: {builder_target: "input"} %>
+    <% end %>
+
+  </div>
+
+  <div class="flex jc-end ai-center gap-20 w-100">
+    <%= link_to "Unset formula", formula_path(formula), class: "fc-1n fs-12", data: {turbo_method: :delete} %>
+    <%= link_to "Done", :back, class: "btn-sm bg-1n fc-white", data: {turbo: false} %>
+  </div>
+<% end %>
