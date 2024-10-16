@@ -5,3 +5,32 @@
 .pos-abs{
   position: absolute;
 }
+
+$offsets: 0, 5, 10, 15, 20;
+
+@each $o in $offsets {
+  .top-#{$o}{
+    top: #{$o}px;
+  }
+  .bottom-#{$o}{
+    bottom: #{$o}px;
+  }
+  .left-#{$o} {
+    left: #{$o}px;
+  }
+  .right-#{$o} {
+    right: #{$o}px;
+  }
+  .top-#{$o}-n{
+    top: -#{$o}px;
+  }
+  .bottom-#{$o}-n{
+    bottom: -#{$o}px;
+  }
+  .left-#{$o}-n {
+    left: -#{$o}px;
+  }
+  .right-#{$o}-n {
+    right: -#{$o}px;
+  }
+}

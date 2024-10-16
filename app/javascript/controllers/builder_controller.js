@@ -19,12 +19,12 @@ export default class extends Controller {
   }
 
   selectMetric() {
-    this.addToFormula(`#{${event.target.dataset.id}}`)
+    this.addToFormula(`#{${event.target.dataset.id}:0}`)
   }
 
   addToFormula(input) {
     let p = Array.from(this.outputTarget.children).indexOf(this.fieldTarget)
-    let a = this.inputTarget.value.split(/(\#\{\d*\})|([\(\)\*\^\+\-\/])|(\d+\.?\d*)/).filter(elm => elm)
+    let a = this.inputTarget.value.split(/(\#\{\d+\:\d+\})|([\(\)\*\^\+\-\/])|(\d+\.?\d*)/).filter(elm => elm)
     a.splice(p, 0, input)
     this.inputTarget.value = a.join('')
     this.formulaFormTarget.requestSubmit()
@@ -53,7 +53,7 @@ export default class extends Controller {
   backSpace() {
     if (this.fieldTarget.value === "") {
       let p = Array.from(this.outputTarget.children).indexOf(this.fieldTarget)
-      let a = this.inputTarget.value.split(/(\#\{\d*\})|([\(\)\*\^\+\-\/])|(\d+\.?\d*)/).filter(elm => elm)
+      let a = this.inputTarget.value.split(/(\#\{\d+\:\d+\})|([\(\)\*\^\+\-\/])|(\d+\.?\d*)/).filter(elm => elm)
       a.splice(p-1,1)
       this.inputTarget.value = a.join('')
       this.formulaFormTarget.requestSubmit()
@@ -61,5 +61,13 @@ export default class extends Controller {
       this.fieldTarget.value = ""
       this.searchFormTarget.requestSubmit()
     }
+  }
+
+  updatePeriod() {
+    const oldCode = event.target.dataset.code
+    const newCode = oldCode.replace(/\:\d+\}/, `:${event.target.value}}`)
+    const formula = this.inputTarget.value
+    this.inputTarget.value = formula.replace(oldCode, newCode)
+    this.formulaFormTarget.requestSubmit()
   }
 }

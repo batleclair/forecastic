@@ -25,4 +25,5 @@ Rails.application.routes.draw do
   patch "sheets/:id/sort", to: "sheets#sort"
   patch "sections/:id/sort", to: "sections#sort"
   patch "projects/:sheet_id/:metric_id/:period_id", to: "projects#input", as: :input
+  get "projects/:sheet_id/:metric_id/:period_id/test", to: "projects#test"
 end

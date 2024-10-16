@@ -1,6 +1,14 @@
 <%= turbo_frame_tag "output", data: {builder_target: "output"} do %>
   <% formula.output_array&.each do |component| %>
-    <span class="mr-5"><%= component %></span>
+    <span class="mr-5 pos-rel">
+      <%= component.label %>
+      <% if component.metric? %>
+        <%= select_tag "N",
+          options_for_select([["N", 0], ["N-1", 1], [ "N-2", 2], ["N-3", 3]], component.period),
+          class: "round bg-white bg-to-1n fc-2n fc-to-white fs-10 border-0 pos-abs right-0 bottom-15-n",
+          data: {action: "change->builder#updatePeriod", code: component.code} %>
+      <% end %>
+    </span>
   <% end %>
   <%= render partial: "formulas/field" %>
 <% end %>

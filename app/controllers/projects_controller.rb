@@ -37,6 +37,16 @@ class ProjectsController < ApplicationController
     render turbo_stream: (turbo_stream.update "table", partial: "sheets/table")
   end
 
+  def test
+    @sheet = Sheet.find(params[:sheet_id])
+    @project = @sheet.project
+    @periods = @project.periods
+    @metric = Metric.find(params[:metric_id])
+    period = Period.find(params[:period_id])
+    @project.assign(@metric, period, params[:value])
+    @project.assign_dependents(@metric, period)
+  end
+
   private
 
   def project_params

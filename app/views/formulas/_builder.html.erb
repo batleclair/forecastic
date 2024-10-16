@@ -5,12 +5,7 @@
 
           <%= form_tag edit_metric_path(formula.metric), method: :get, data: {builder_target: "searchForm", turbo_frame: "results"}, class: "pos-rel p-5" do %>
 
-            <%= turbo_frame_tag "output", data: {builder_target: "output"} do %>
-              <% formula.output_array&.each do |component| %>
-                <span class="mr-5"><%= component %></span>
-              <% end %>
-              <%= render partial: "formulas/field" %>
-            <% end %>
+            <%= render partial: "formulas/output", locals: {formula: formula} %>
 
             <%= turbo_frame_tag "results" do %>
               <ul class="p-0 m-0 fs-12 bg-white pos-abs w-100 z-1">
@@ -26,7 +21,7 @@
 
 
     <%= simple_form_for(formula, html: {data: {turbo: true, builder_target: "formulaForm"}}) do |f| %>
-      <%= f.input_field :body, as: :hidden, data: {builder_target: "input"} %>
+      <%= f.input_field :body, data: {builder_target: "input"} %>
     <% end %>
 
   </div>

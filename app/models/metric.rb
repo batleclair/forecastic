@@ -6,12 +6,22 @@ class Metric < ApplicationRecord
   has_many :entries, dependent: :destroy
   validates :name, presence: {message: "Name required"}
   include PgSearch::Model
+  include Relatable
   pg_search_scope :search_by_name, against: :name, using: { tsearch: {prefix: true} }
   after_create :add_to_project_values
   after_destroy :remove_from_project_values
 
   def dependencies
-    Metric.joins(:formula).where("body LIKE ?", "%" + "\#\{#{self.id}\}" + "%").includes(:formula)
+    Metric.joins(:formula).where("body LIKE ?", "%" + "\#\{#{self.id}\:" + "%").includes(:formula)
+  end
+
+  def dependents_on(period)
+    dependents = Metric.joins(:formula).where("body LIKE ?", "%" + "\#\{#{self.id}\:" + "%").includes(:formula)
+    a = {}
+    dependents.each do |d|
+      d.formula.scan_for(self).each {|e| a[d] = period.offset(- e.period) }
+    end
+    a
   end
 
   private
@@ -28,7 +38,7 @@ class Metric < ApplicationRecord
   end
 
   def remove_from_project_values
-    updated_values = project.values.delete("#{id}")
+    updated_values = project.values&.delete("#{id}")
     project.update(values: updated_values)
   end
 end

@@ -7,8 +7,6 @@ class Project < ApplicationRecord
 
   after_create :initialize_default
 
-  include Loopable
-
   def value_for(metric, period)
     values["#{metric.id}"]["#{period.id}"]["input"] || values["#{metric.id}"]["#{period.id}"]["calc"]
   end
@@ -39,19 +37,20 @@ class Project < ApplicationRecord
 
   def assign_dependents(metric, period)
     @looper = {"#{metric.id}": {"#{period.id}": 1}}
+    @output = values
     assign_dependents_loop(metric, period)
+    self.assign_attributes(values: @output)
   end
 
   def assign_dependents_loop(metric, period)
-    output = values
-    metric.dependencies.each do |d|
-      if @looper.dig(:"#{d.id}", :"#{period.id}")
+    metric.dependents_on(period).each do |m, p|
+      loop = @looper.dig(:"#{m.id}", :"#{p&.id}") || 0
+      if loop > 10 || p.nil?
         return
       else
-        @looper.merge!({"#{d.id}": {"#{period.id}": 1}})
-        output["#{d.id}"]["#{period.id}"]["calc"] = d.formula.calc(period, values)
-        self.assign_attributes(values: output)
-        assign_dependents_loop(d, period)
+        @looper.merge!({"#{m.id}": {"#{p.id}": loop += 1}})
+        @output["#{m.id}"]["#{p.id}"]["calc"] = m.formula&.calc(p, @output)
+        assign_dependents_loop(m, p)
       end
     end
   end
@@ -60,7 +59,7 @@ class Project < ApplicationRecord
 
   def initialize_default
     Sheet.create(project_id: id, name: "Sheet1")
-    for i in 1..12 do
+    for i in 1..2 do
       Period.create(project_id: id, date: Date.new(Date.today.year, i))
     end
   end
