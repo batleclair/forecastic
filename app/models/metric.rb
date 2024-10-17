@@ -27,14 +27,19 @@ class Metric < ApplicationRecord
   private
 
   def add_to_project_values
-    project.values[:"#{id}"] = {}
-    project.periods.each do |period|
-      project.values[:"#{id}"][:"#{period.id}"] = {
-        input: nil,
-        calc: nil
-      }
-    end
-    project.save
+    # project.values[:"#{id}"] = {}
+    # project.periods.each do |period|
+    #   project.values[:"#{id}"][:"#{period.id}"] = {
+    #     input: nil,
+    #     calc: nil
+    #   }
+    # end
+    # project.save
+
+    output = project.values
+    output["#{id}"] = {}
+    project.periods.each { |p| output["#{id}"]["#{p.id}"] = Dependent.new }
+    project.update(values: output)
   end
 
   def remove_from_project_values

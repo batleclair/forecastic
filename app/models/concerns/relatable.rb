@@ -18,16 +18,13 @@ module Relatable
   end
 
   class Dependent
-    attr_accessor :precedent, :metric, :period
+    attr_accessor :calc, :input, :dependents
 
     def initialize(params={})
-      @metric = params.fetch(:metric)
-      @precedent = params.fetch(:precedent)
-      @period = set_period(params.fetch(:period))
+      @input = params.dig(:input)
+      @calc = params.dig(:calc)
+      @dependents = params.dig(:dependents) || {}
     end
 
-    def set_period(period)
-      @metric.formula.body.scan()
-    end
   end
 end
