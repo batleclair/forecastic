@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   end
   resources :sheets, only: %i(edit update destroy) do
     resources :sections, only: %i(create)
-    resources :entries, only: %i(create update)
+    resources :entries, only: %i(update)
   end
   resources :sections, only: %i(show edit update destroy) do
     resources :rows, only: %i(new)

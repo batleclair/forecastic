@@ -2,7 +2,8 @@ class Formula < ApplicationRecord
   belongs_to :metric
   has_one :project, through: :metric
   # after_commit :update_project_values, on: %i(update)
-  before_update :update_dependents
+  # before_update :update_dependents
+  before_update :refresh_dependents
   before_destroy :delete_calcs
   include Relatable
 
@@ -103,11 +104,6 @@ class Formula < ApplicationRecord
       components&.each do |c|
         # binding.pry
         if p.offset(-c[1].to_i)
-          # ["#{metric.id}"] << p.offset(-v.to_i).id
-          # h = output.dig("#{k}", "#{p.id}", "dependents", "#{metric.id}") ||
-          # { metric.id => p.offset(-v.to_i).id }
-          # raise
-          # if output["#{k}"]["#{p.id}"]["dependents"]["#{metric.id}"]
           if output.dig("#{c[0]}", "#{p.id}", "dependents", "#{metric.id}")
             output["#{c[0]}"]["#{p.id}"]["dependents"]["#{metric.id}"] << p.offset(-c[1].to_i).id.to_s
           else
@@ -118,5 +114,49 @@ class Formula < ApplicationRecord
     end
 
     project.update(values: output)
+  end
+
+
+
+  def component_ids
+    r = /\#\{\d+\:/
+    body.scan(r)&.map!{|e| e.scan(/\d+/)}&.flatten&.map!{|e| e.to_i}&.uniq
+  end
+
+  def component_ids_were
+    r = /\#\{\d+\:/
+    body_was&.scan(r)&.map!{|e| e.scan(/\d+/)}&.flatten&.map!{|e| e.to_i}&.uniq
+  end
+
+  def remove_from_dependents
+    m = metric.entries.pluck(:id)
+    entries = Entry.where(metric_id: component_ids_were)
+    # binding.pry
+    entries.each do |e|
+      e.dependents.delete_if{|d| d.to_i.in?(m)}
+      e.save_without_calc
+    end
+  end
+
+  def update_related_entries
+    @self_entries = Entry.where(metric: metric)
+    Entry.where(metric: metric).each do |e|
+      e.formula_body = self.body
+      e.save_without_calc
+    end
+  end
+
+  def refresh_dependents
+    remove_from_dependents
+    update_related_entries
+    Entry.where(metric_id: component_ids).includes(:period).each do |e|
+      components.select{|i| i[0] == e.metric_id.to_s}.each do |c|
+        if e.date.prev_month(-c[1].to_i)
+          e.dependents << @self_entries.find_by(metric: metric, date: e.date.prev_month(-c[1].to_i)).id.to_s
+          e.dependents = e.dependents.uniq
+          e.save_without_calc
+        end
+      end
+    end
   end
 end

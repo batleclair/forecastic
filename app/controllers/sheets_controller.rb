@@ -6,6 +6,7 @@ class SheetsController < ApplicationController
     @periods = @project.periods
     @sections = @sheet.sections
     @metrics = Metric.joins(:rows).where(rows: { section_id: @sections.pluck(:id) }).distinct
+    @entries = Entry.joins(:metric).where(metric: { metric_id: @metrics.pluck(:id) }).distinct
     # refresh_worksheet
     # raise
   end

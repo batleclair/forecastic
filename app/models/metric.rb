@@ -8,7 +8,8 @@ class Metric < ApplicationRecord
   include PgSearch::Model
   include Relatable
   pg_search_scope :search_by_name, against: :name, using: { tsearch: {prefix: true} }
-  after_create :add_to_project_values
+  # after_create :add_to_project_values
+  after_create :add_entries
   after_destroy :remove_from_project_values
 
   def dependencies
@@ -22,6 +23,10 @@ class Metric < ApplicationRecord
       d.formula.scan_for(self).each {|e| a[d] = period.offset(- e.period) }
     end
     a
+  end
+
+  def add_entries
+    project.periods.each { |p| Entry.create(metric: self, period: p) }
   end
 
   private

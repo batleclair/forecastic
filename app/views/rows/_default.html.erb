@@ -5,20 +5,18 @@
     <% end %>
   </td>
 
-  <% @periods.each do |period| %>
+  <% row.entries.each do |entry| %>
     <td>
-      <% if @project.value_is_calc?(row.metric, period) %>
-          <span class="fs-14 text-end w-100 block pl-10 pr-10 pt-5 pb-5">
-            <%= @project.value_for(row.metric, period) %>
-          </span>
-        <% else %>
-        <%= simple_form_for(@project, url: input_path(@sheet.id, row.metric.id, period.id), html: {class: "", data: {turbo: true, controller: "forms"}}) do |f| %>
-          <%= text_field_tag :value, @project.value_for(row.metric, period), class: "border-2l w-100 pl-10 pr-10 pt-5 pb-5 text-end bg-1l fc-5n", data: {action: "change->forms#submit"} %>
+      <% if entry.calc && !entry.value %>
+        <span class="fs-14 text-end w-100 block pl-10 pr-10 pt-5 pb-5">
+          <%= entry.calc %>
+        </span>
+      <% else %>
+        <%= simple_form_for([@sheet, entry]) do |f| %>
+          <%= f.input_field :value, class: "border-2l w-100 pl-10 pr-10 pt-5 pb-5 text-end bg-1l fc-5n" %>
         <% end %>
       <% end %>
     </td>
-
-
     <%# <%= render partial: "entries/cell", locals: {period: period, metric: row.metric} %>
   <% end %>
 </tr>
