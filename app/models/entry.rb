@@ -7,6 +7,8 @@ class Entry < ApplicationRecord
   before_create :set_date
   after_update :update_dependents, unless: :still
 
+  @@calculations = {}
+
   def still!
     self.still = true
   end
@@ -20,24 +22,35 @@ class Entry < ApplicationRecord
     self.date = period.date
   end
 
-  # def self.set_cache(hash)
-  #   self.cached_hash = hash
-  #   Rails.cache.write('entries', hash)
-  # end
 
-  # starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-  # ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-  # p elapsed = "#{((ending - starting)*1000).round(2)}ms to perform"
+  def gather_all_dependents(visited = {}, sorted = [])
+    return sorted if visited[self.id] == :permanent
+
+    raise 'Cyclic dependency detected' if visited[self.id] == :temporary
+
+    visited[self.id] = :temporary
+
+    dependent_entries = Entry.where(id: self.dependents)
+    dependent_entries.each do |dep|
+      dep.gather_all_dependents(visited, sorted)
+    end
+
+    visited[self.id] = :permanent
+
+    sorted << self
+    sorted
+  end
 
   def update_dependents
-    entries = Entry.where(id: self.dependents)
-    entries.each do |e|
+    @@calculations.clear
+    (gather_all_dependents - [self]).reverse.each do |e|
       result = e.calculate
       unless e.calc_was == result
-        # Entry.cached_hash[e.metric_id][e.date][:calc] = result
+        e.still!
         e.update(calc: result)
       end
     end
+    # binding.pry
   end
 
   def update_formula
@@ -52,22 +65,12 @@ class Entry < ApplicationRecord
   end
 
   def precedent_ids
-    formula_body.scan(/\#\{\d+\}/).map{|e| e[/\d+/]}
+    formula_body&.scan(/\#\{\d+\}/)&.map{|e| e[/\d+/]}
   end
 
   def precedents
     Entry.where(id: precedent_ids)
   end
-
-  # def precedents
-  #   a = []
-  #   formula_body&.gsub(/\#\{\d+\:\d+\}/) do |match|
-  #     m = match.partition(":").first[/\d+/].to_i
-  #     p = match.partition(":").last[/\d+/].to_i
-  #     a << Entry.find_by(metric_id: m, date: date.prev_month(p))
-  #   end
-  #   a
-  # end
 
   def reset_formula
     body = formula&.body
@@ -82,44 +85,29 @@ class Entry < ApplicationRecord
   end
 
   def calculate
+
+    return @@calculations[self.id] if @@calculations.key?(self.id)
+
     na = false
     output = "#{formula_body}"
+
     precedents.each do |p|
-      r = p.value || p.calc
+      r = @@calculations[p.id] || p.value || p.calc
       na = true unless r
       output = output.gsub(/\#\{(#{p.id})\}/, r.to_s)
     end
+
     if na
-      return
+      return nil
     else
       begin
-        eval(output)
+        result = eval(output)
+        @@calculations[self.id] = result
+        result
       rescue SyntaxError, StandardError => e
         Rails.logger.error("Cannot calculate #{self.id} based on formula #{output}")
         nil
       end
     end
   end
-
-  # def calculate
-  #   na = false
-  #   output = formula_body&.gsub(/\#\{\d+\:\d+\}/) do |match|
-  #     m = match.partition(":").first[/\d+/].to_i
-  #     p = match.partition(":").last[/\d+/].to_i
-  #     # e = Entry.cached_hash[m][date.prev_month(p)]
-  #     # e ? e[:value] || e[:calc] : na = true
-  #     e = Entry.find_by(metric_id: m, date: date.prev_month(p))
-  #     e ? e.value || e.calc : na = true
-  #   end
-  #   if na
-  #     return
-  #   else
-  #     begin
-  #       eval(output)
-  #     rescue SyntaxError, StandardError => e
-  #       Rails.logger.error("Cannot calculate #{self.id} based on formula #{output}")
-  #       nil
-  #     end
-  #   end
-  # end
 end
