@@ -6,7 +6,8 @@
   </td>
 
   <% row.entries.each do |entry| %>
-    <td>
+    <td class="pos-rel">
+      <span class="pos-abs bottom-0 fs-8"><%= entry.id %></span>
       <% if entry.calc && !entry.value %>
         <span class="fs-14 text-end w-100 block pl-10 pr-10 pt-5 pb-5">
           <%= entry.calc %>

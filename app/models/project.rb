@@ -2,6 +2,7 @@ class Project < ApplicationRecord
   has_many :sheets, -> { order(position: :asc) }, dependent: :destroy
   has_many :periods, dependent: :destroy
   has_many :metrics, dependent: :destroy
+  has_many :entries, through: :metrics
 
   validates :name, presence: {message: "Name required"}
 
@@ -69,6 +70,15 @@ class Project < ApplicationRecord
     #   end
     # end
   end
+
+  # def cache_entries
+  #   hash = {}
+  #   entries.includes(:period, :metric).each do |e|
+  #     sub_h = { e.period.date => { value: e.value, calc: e.calc } }
+  #     hash[e.metric.id] ? hash[e.metric.id].merge!(sub_h) : hash[e.metric.id] = sub_h
+  #   end
+  #   Entry.cached_hash = hash
+  # end
 
   private
 

@@ -13,7 +13,8 @@ class EntriesController < ApplicationController
   def update
     @entry = Entry.find(params[:id])
     @entry.value = entry_params[:value]
-    if @entry.save(context: :change)
+    # Entry.cached_hash[@entry.metric_id][@entry.date][:value] = @entry.value
+    if @entry.save
       # render turbo_stream: (turbo_stream.update "cell", partial: "entries/cell", locals: {metric: @entry.metric, period: @entry.period})
       render turbo_stream: (turbo_stream.update "table", partial: "sheets/table")
     else

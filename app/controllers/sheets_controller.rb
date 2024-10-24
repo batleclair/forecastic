@@ -7,6 +7,7 @@ class SheetsController < ApplicationController
     @sections = @sheet.sections
     @metrics = Metric.joins(:rows).where(rows: { section_id: @sections.pluck(:id) }).distinct
     @entries = Entry.joins(:metric).where(metric: { metric_id: @metrics.pluck(:id) }).distinct
+    # @project.cache_entries unless Entry.cached_hash
     # refresh_worksheet
     # raise
   end

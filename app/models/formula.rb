@@ -152,7 +152,8 @@ class Formula < ApplicationRecord
     Entry.where(metric_id: component_ids).includes(:period).each do |e|
       components.select{|i| i[0] == e.metric_id.to_s}.each do |c|
         if e.date.prev_month(-c[1].to_i)
-          e.dependents << @self_entries.find_by(metric: metric, date: e.date.prev_month(-c[1].to_i)).id.to_s
+          d = @self_entries.find_by(metric: metric, date: e.date.prev_month(-c[1].to_i))
+          e.dependents << d.id.to_s if d
           e.dependents = e.dependents.uniq
           e.save_without_calc
         end
