@@ -23,34 +23,43 @@ class Entry < ApplicationRecord
   end
 
 
-  def gather_all_dependents(visited = {}, sorted = [])
-    return sorted if visited[self.id] == :permanent
+  def all_dependents(visited = {}, sorted = [])
+    return sorted if visited[self.id] == :sorted
 
-    raise 'Cyclic dependency detected' if visited[self.id] == :temporary
+    raise 'Circular dependency detected' if visited[self.id] == :ongoing
 
-    visited[self.id] = :temporary
-
+    visited[self.id] = :ongoing
     dependent_entries = Entry.where(id: self.dependents)
     dependent_entries.each do |dep|
-      dep.gather_all_dependents(visited, sorted)
+      dep.all_dependents(visited, sorted)
     end
-
-    visited[self.id] = :permanent
+    visited[self.id] = :sorted
 
     sorted << self
     sorted
   end
 
+
   def update_dependents
     @@calculations.clear
-    (gather_all_dependents - [self]).reverse.each do |e|
-      result = e.calculate
+    updates = {}
+    sorted_dependents = (all_dependents - [self]).reverse
+    all_precedent_ids = sorted_dependents.flat_map(&:precedent_ids).uniq
+    precedents_hash = Entry.where(id: all_precedent_ids).index_by(&:id)
+    sorted_dependents.each do |e|
+      result = e.calculate(precedents_hash)
       unless e.calc_was == result
-        e.still!
-        e.update(calc: result)
+        # e.still!
+        # e.update(calc: result)
+        updates[e.id] = result
       end
     end
     # binding.pry
+
+    if updates.any?
+      sql_cases = updates.map { |id, calc| "WHEN #{id} THEN #{ActiveRecord::Base.connection.quote(calc)}" }.join(' ')
+      Entry.where(id: updates.keys).update_all("calc = CASE id #{sql_cases} END")
+    end
   end
 
   def update_formula
@@ -84,14 +93,15 @@ class Entry < ApplicationRecord
     update(formula_body: body) if body != formula_body
   end
 
-  def calculate
+  def calculate(precedents_hash)
 
     return @@calculations[self.id] if @@calculations.key?(self.id)
 
     na = false
     output = "#{formula_body}"
 
-    precedents.each do |p|
+    precedent_ids.each do |precedent_id|
+      p = precedents_hash[precedent_id.to_i]
       r = @@calculations[p.id] || p.value || p.calc
       na = true unless r
       output = output.gsub(/\#\{(#{p.id})\}/, r.to_s)
