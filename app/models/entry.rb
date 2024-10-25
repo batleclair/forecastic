@@ -22,7 +22,6 @@ class Entry < ApplicationRecord
     self.date = period.date
   end
 
-
   def all_dependents(visited = {}, sorted = [])
     return sorted if visited[self.id] == :sorted
 
@@ -48,29 +47,13 @@ class Entry < ApplicationRecord
     precedents_hash = Entry.where(id: all_precedent_ids).index_by(&:id)
     sorted_dependents.each do |e|
       result = e.calculate(precedents_hash)
-      unless e.calc_was == result
-        # e.still!
-        # e.update(calc: result)
-        updates[e.id] = result
-      end
+      updates[e.id] = result unless e.calc_was == result
     end
-    # binding.pry
 
     if updates.any?
-      sql_cases = updates.map { |id, calc| "WHEN #{id} THEN #{ActiveRecord::Base.connection.quote(calc)}" }.join(' ')
+      sql_cases = updates.map { |id, calc| "WHEN #{id} THEN #{calc ? ActiveRecord::Base.connection.quote(calc) : 0}" }.join(' ')
       Entry.where(id: updates.keys).update_all("calc = CASE id #{sql_cases} END")
     end
-  end
-
-  def update_formula
-    updated_formula_body = formula_body&.gsub(/\#\{\d+\:\d+\}/) do |match|
-      p = match.partition(":")
-      m = p.first[/\d+/].to_i
-      d = p.last[/\d+/].to_i
-      e = Entry.find_by(metric_id: m, date: date.prev_month(d))
-      e ? "\#{#{e.id}}" : return
-    end
-    update(formula_body: updated_formula_body)
   end
 
   def precedent_ids
@@ -81,18 +64,6 @@ class Entry < ApplicationRecord
     Entry.where(id: precedent_ids)
   end
 
-  def reset_formula
-    body = formula&.body
-    body&.gsub!(/\#\{\d+\:\d+\}/) do |match|
-      m = match.partition(":").first[/\d+/].to_i
-      d = match.partition(":").last[/\d+/].to_i
-      e = Entry.find_by(metric_id: m, date: date.prev_month(d))
-      e ? "\#{#{e.id}}" : return
-    end
-    still!
-    update(formula_body: body) if body != formula_body
-  end
-
   def calculate(precedents_hash)
 
     return @@calculations[self.id] if @@calculations.key?(self.id)
@@ -100,11 +71,11 @@ class Entry < ApplicationRecord
     na = false
     output = "#{formula_body}"
 
-    precedent_ids.each do |precedent_id|
+    precedent_ids&.each do |precedent_id|
       p = precedents_hash[precedent_id.to_i]
-      r = @@calculations[p.id] || p.value || p.calc
+      r = @@calculations[p&.id] || p&.value || p&.calc
       na = true unless r
-      output = output.gsub(/\#\{(#{p.id})\}/, r.to_s)
+      output = output.gsub(/\#\{(#{p&.id})\}/, r.to_s)
     end
 
     if na
