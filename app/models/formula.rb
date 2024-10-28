@@ -2,8 +2,7 @@ class Formula < ApplicationRecord
   belongs_to :metric
   has_one :project, through: :metric
   before_update :update_entries
-  before_destroy :delete_calcs
-  include Relatable
+    include Relatable
 
   def components
     r = /\#\{\d+\:\d+\}/
@@ -63,8 +62,12 @@ class Formula < ApplicationRecord
     precedent_entries.each do |e|
       e.dependents.delete_if{|d| d.to_i.in?(entry_ids)}
       components&.select{|i| i[0].to_i == e.metric_id}&.each do |i|
-        entry = self_entries.find{|s| s.date == e.date.prev_month(-i[1].to_i)}
-        e.dependents << entry.id.to_s unless entry.nil?
+        if e.date.nil?
+          e.dependents += self_entries.pluck(:id)
+        else
+          entry = self_entries.find{|s| s.date == e.date&.prev_month(-i[1].to_i)}
+          e.dependents << entry.id.to_s unless entry.nil?
+        end
       end
       precedent_updates[e.id] = e.dependents
     end
@@ -78,9 +81,10 @@ class Formula < ApplicationRecord
       result = formula_body&.gsub(/\#\{\d+\:\d+\}/) do |match|
         m = match.partition(":").first[/\d+/].to_i
         d = match.partition(":").last[/\d+/].to_i
-        output = precedent_entries.find{ |pe| pe.metric_id == m && pe.date == e.date.prev_month(d) }
+        output = precedent_entries.find{ |pe| pe.metric_id == m && (pe.date.nil? ? true : pe.date == e.date&.prev_month(d)) }
         output ? "\#{#{output&.id}}" : "na"
       end
+
       result = nil if result.include?("na")
       e.still!
       e.update(formula_body: result)

@@ -9,7 +9,7 @@ class Metric < ApplicationRecord
   include Relatable
   pg_search_scope :search_by_name, against: :name, using: { tsearch: {prefix: true} }
   # after_create :add_to_project_values
-  after_create :add_entries
+  after_save :add_or_remove_entries
   after_destroy :remove_from_project_values
 
   def dependencies
@@ -25,8 +25,14 @@ class Metric < ApplicationRecord
     a
   end
 
-  def add_entries
-    project.periods.each { |p| Entry.create(metric: self, period: p) }
+  def add_or_remove_entries
+    if fixed
+      entries.where.not(date: nil).each{|e| e&.destroy}
+      Entry.create(metric_id: id, period_id: project.fixed_period.id)
+    else
+      Entry.find_by(metric_id: id, period_id: project.fixed_period.id)&.destroy
+      project.periods.each { |p| Entry.create(metric: self, period: p) }
+    end
   end
 
   private

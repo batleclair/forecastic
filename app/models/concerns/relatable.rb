@@ -15,6 +15,10 @@ module Relatable
     def metric?
       @type == "metric"
     end
+
+    def fixed?
+      self.metric? && @metric&.fixed
+    end
   end
 
   class Dependent

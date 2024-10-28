@@ -5,6 +5,10 @@
     <% end %>
   </td>
 
+  <% unless row.metric.fixed %>
+    <td></td>
+  <% end %>
+
   <% row.entries.each do |entry| %>
     <td class="pos-rel">
       <span class="pos-abs bottom-0 fs-8"><%= entry.id %></span>
@@ -19,5 +23,11 @@
       <% end %>
     </td>
     <%# <%= render partial: "entries/cell", locals: {period: period, metric: row.metric} %>
+  <% end %>
+
+  <% if row.metric.fixed %>
+    <% @periods.count.times do %>
+      <td></td>
+    <% end %>
   <% end %>
 </tr>

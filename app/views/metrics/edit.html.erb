@@ -2,6 +2,7 @@
 
 <%= simple_form_for(@metric, html: {class: "v-form", data: {controller: "forms"}}) do |f| %>
   <%= f.input :name, input_html: {data: {action: "change->forms#submit"}} %>
+  <%= f.input :fixed, input_html: {data: {action: "change->forms#submit"}} %>
 <% end %>
 
 <%= turbo_frame_tag "formula" do %>

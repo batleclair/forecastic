@@ -7,6 +7,7 @@
 
 <%= simple_form_for([@section, @metric], html: {class: "v-form", data: {turbo: true}}) do |f| %>
   <%= f.input :name %>
+  <%= f.input :fixed %>
   <div class="flex jc-end w-100">
     <%= f.button :submit %>
   </div>

@@ -2,7 +2,7 @@
   <% formula.output_array&.each do |component| %>
     <span class="mr-5 pos-rel">
       <%= component.label %>
-      <% if component.metric? %>
+      <% if component.fixed? %>
         <%= select_tag "N",
           options_for_select([["N", 0], ["N-1", 1], [ "N-2", 2], ["N-3", 3]], component.period),
           class: "round bg-white bg-to-1n fc-2n fc-to-white fs-10 border-0 pos-abs right-0 bottom-15-n",

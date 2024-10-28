@@ -7,10 +7,15 @@
     <table class="mb-10 w-100 fixed-table">
       <thead>
         <td class="w-150px"></td>
+          <td class="text-center fs-12 fw-5">
+            <div class=" bg-2l ml-5 mr-5 p-5">
+              fixed
+            </div>
+          </td>
         <% @periods.each do |period| %>
           <td class="text-center fs-12 fw-5">
             <div class=" bg-2l ml-5 mr-5 p-5">
-              <%= period.date.strftime('%m-%Y') %>
+              <%= period.date&.strftime('%m-%Y') %>
             </div>
           </td>
         <% end %>
