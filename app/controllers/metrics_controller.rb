@@ -23,7 +23,7 @@ class MetricsController < ApplicationController
   def edit
     @metric = Metric.find(params[:id])
     if !params[:query].blank?
-      @metrics = @metric.project.metrics.where.not(id: @metric.id).search_by_name(params[:query]).first(5)
+      @metrics = @metric.project.metrics.search_by_name(params[:query]).first(5)
     end
     # @metrics = @metrics.search_by_name(params[:query]) if params[:query] && !params[:query].blank?
   end

@@ -73,7 +73,7 @@ class Entry < ApplicationRecord
 
     precedent_ids&.each do |precedent_id|
       p = precedents_hash[precedent_id.to_i]
-      r = @@calculations[p&.id] || p&.value || p&.calc
+      r = p&.value || @@calculations[p&.id] || p&.calc
       na = true unless r
       output = output.gsub(/\#\{(#{p&.id})\}/, r.to_s)
     end
