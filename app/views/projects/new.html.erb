@@ -1,8 +1,2 @@
-  <% @title = "Create project" %>
-  <%= simple_form_for @project, html: {class: "v-form"}, data: { action: "turbo:submit-end->modals#redirect" } do |f| %>
-    <%= f.input :name %>
-    <%= f.input :description %>
-    <div class="flex jc-end w-100">
-      <%= f.button :submit %>
-    </div>
-  <% end %>
+<% @title = "Create project" %>
+<%= render partial: "projects/form", locals: { action: "turbo:submit-end->modals#redirect" } %>

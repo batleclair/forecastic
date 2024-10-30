@@ -1,7 +1,13 @@
 <%= turbo_frame_tag "show" do %>
   <div class="bg-white round-20 w-100 p-20 max-w-800">
     <div class="mb-20">
-      <h3 class="mb-5"><%= @project.name %></h3>
+      <div class="w-100 flex jc-between ai-center mb-5">
+        <h3><%= @project.name %></h3>
+        <%= link_to edit_project_path(@project), class: "pr-5 pl-5 fs-12 fc-1n fw-5", data: {turbo_frame: "modal"} do %>
+          <span class="mso-icon">edit</span>
+          Edit / Delete
+        <% end %>
+      </div>
       <p class="fs-12"><%= @project.description %></p>
     </div>
     <div class="mb-20 w-100 flex jc-between ai-center">

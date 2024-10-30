@@ -1,0 +1,7 @@
+<%= simple_form_for @project, html: {class: "v-form"}, data: { action: action } do |f| %>
+  <%= f.input :name %>
+  <%= f.input :description, input_html: {class: "min-w-300"} %>
+  <div class="flex jc-end w-100">
+    <%= f.button :submit %>
+  </div>
+<% end %>

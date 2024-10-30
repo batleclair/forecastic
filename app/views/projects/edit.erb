@@ -1,0 +1,13 @@
+<% @title = "Edit project" %>
+<%= render partial: "projects/form", locals: { action: "" } %>
+
+<div class="w-100 border-b-2n mt-10 mb-10"></div>
+
+<div class="flex-middle w-100">
+
+  <%= button_to project_path(@project), method: :delete, class: "fs-12 fc-4n flex-middle", data: {turbo: false} do %>
+    Delete permanently
+    <span class="mso-icon min-w-20">delete</span>
+  <% end %>
+
+</div>

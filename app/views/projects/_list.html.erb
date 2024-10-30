@@ -1,0 +1,14 @@
+<%= turbo_frame_tag "list" do %>
+
+  <% @projects.each do |project| %>
+    <% selected = active == project.id ? "active" : "" %>
+    <div class="bg-white round-20 pos-rel w-100 mb-10" data-menus-target="item" <%= selected %>>
+      <%= link_to "", project_path(project), class: "w-100 h-100 pos-abs", data: {turbo_frame: "show", action: "click->menus#setActive"} %>
+      <div class="flex jc-between ai-center p-20">
+        <h3><%= project.name %></h3>
+        <span class="active-icon fc-1n">→</span>
+      </div>
+    </div>
+  <% end %>
+
+<% end %>

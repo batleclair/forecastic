@@ -3,6 +3,7 @@ class Project < ApplicationRecord
   has_many :periods, -> { where.not(date: nil).order(date: :asc) }, dependent: :destroy
   has_many :metrics, dependent: :destroy
   has_many :entries, through: :metrics
+  before_destroy -> { fixed_period.destroy }
 
   validates :name, presence: {message: "Name required"}
 
@@ -22,4 +23,9 @@ class Project < ApplicationRecord
     Period.create(project_id: id, date: nil)
   end
 
+end
+
+
+class Project < ApplicationRecord
+  has_many :periods, -> { where.not(date: nil).order(date: :asc) }, dependent: :destroy
 end

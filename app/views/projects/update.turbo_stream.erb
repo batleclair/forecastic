@@ -1,0 +1,3 @@
+<%= turbo_stream.update "show", template: "projects/show" %>
+<%= turbo_stream.update "modal" %>
+<%= turbo_stream.update "list", partial: "projects/list", locals: { active: @project.id } %>
