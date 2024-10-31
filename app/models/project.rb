@@ -4,6 +4,7 @@ class Project < ApplicationRecord
   has_many :metrics, dependent: :destroy
   has_many :entries, through: :metrics
   before_destroy -> { fixed_period.destroy }
+  enum :periodicity, { monthly: 1, quarterly: 3, yearly: 12 }, suffix: true
 
   validates :name, presence: {message: "Name required"}
 
@@ -11,6 +12,10 @@ class Project < ApplicationRecord
 
   def fixed_period
     Period.find_by(project_id: id, date: nil)
+  end
+
+  def p_factor
+    Project.periodicities[periodicity]
   end
 
   private

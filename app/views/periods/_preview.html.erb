@@ -1,0 +1,19 @@
+<%= turbo_frame_tag "show", class: "round-20 bg-white p-20 w-100 w-100 of-x-auto" do %>
+    <h3 class="mb-20">Preview</h3>
+    <table class="mb-10 w-100 fixed-table">
+      <tbody>
+        <% @years.each_with_index do |y, i| %>
+          <% y.each do |period| %>
+            <td class="text-center fs-12 fw-5 w-150px">
+              <div class="bg-2l ml-5 mr-5 p-5">
+                <p>Year <%= i+1 %></p>
+                <%= period.date&.strftime('%m-%Y') %>
+              </div>
+              <div class="p-5"></div>
+            </td>
+          <% end %>
+        <% end %>
+        <td></td>
+      </tbody>
+    </table>
+<% end %>

@@ -1,0 +1,18 @@
+<div class="flex gap-20">
+  <div class="round-20 bg-white p-20 min-w-400">
+    <h3 class="mb-20">Edit period settings</h3>
+
+
+    <%= simple_form_for(@project, url: request.path, method: :get, data: {turbo: true, turbo_frame: "preview", controller: "forms"}) do |f| %>
+      <%= f.input :first_end, discard_day: true, input_html: { data: { action: "input->forms#submit" } } %>
+      <%= f.input :periodicity, collection: Project.periodicities.keys, include_blank: false, input_html: { data: { action: "input->forms#submit" } } %>
+      <div>
+        <%= label_tag "years" %>
+        <%= number_field_tag "years", @years.count, data: { action: "input->forms#submit" } %>
+      </div>
+      <%= f.submit %>
+    <% end %>
+  </div>
+
+  <%= render partial: "periods/preview" %>
+</div>

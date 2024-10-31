@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :projects do
     resources :sheets, only: %i(create show)
     resources :metrics, only: %i(index)
+    resources :periods, only: %i(index)
   end
   resources :sheets, only: %i(edit update destroy) do
     resources :sections, only: %i(create)
